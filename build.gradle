@@ -26,14 +26,16 @@ javafx{
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
-mainClassName='launcher.Main'
-
-jar{
-    manifest{
-        attributes 'Main-Class': 'launcher.Main'
-    }
-}
+//mainClassName='launcher.Main'
+//
+//jar{
+//    manifest{
+//        attributes 'Main-Class': 'launcher.Main'
+//    }
+//}
 
 test {
     useJUnitPlatform()
 }
+
+mainClassName = 'launcher.Launcher'

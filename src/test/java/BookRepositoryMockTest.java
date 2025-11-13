@@ -3,8 +3,8 @@ import model.builder.BookBuilder;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import repository.BookRepository;
-import repository.BookRepositoryMock;
+import repository.book.BookRepository;
+import repository.book.BookRepositoryMock;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,11 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BookRepositoryMockTest {
-    private static repository.BookRepository bookRepository;
+    private static BookRepository bookRepository;
 
     @BeforeAll
     public static void setUp() {
-        bookRepository = new repository.BookRepositoryMock();
+        bookRepository = new BookRepositoryMock();
     }
     @Test
     public void findAll(){

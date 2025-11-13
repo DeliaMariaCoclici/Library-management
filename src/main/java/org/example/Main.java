@@ -3,11 +3,12 @@ package org.example;
 import database.DatabaseConnectionFactory;
 import model.Book;
 import model.builder.BookBuilder;
-import repository.BookRepository;
-import repository.BookRepositoryMock;
-import repository.BookRepositoryMySQL;
-import service.BookService;
-import service.BookServiceImplementation;
+import repository.book.BookRepository;
+import repository.book.BookRepositoryCacheDecorator;
+import repository.book.BookRepositoryMySQL;
+import repository.book.Cache;
+import service.book.BookService;
+import service.book.BookServiceImplementation;
 
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -33,23 +34,23 @@ public class Main {
         System.out.println(bookRepository.findAll());*/
 
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(false).getConnection();
-        BookRepository bookRepository = new BookRepositoryMySQL(connection);
+        BookRepository bookRepository = new BookRepositoryCacheDecorator(new BookRepositoryMySQL(connection), new Cache<>());
+//        BookRepository bookRepository = new BookRepositoryMySQL(connection);
         BookService bookService = new BookServiceImplementation(bookRepository);
-
         bookService.save(book);
         System.out.println(bookService.findAll());
 
-        Book book2 = new BookBuilder()
-                .setTitle("Moara cu noroc")
-                .setAuthor("IoanSlavici")
-                .setPublishedDate(LocalDate.of(1950,2,10))
-                .build();
-
-        bookService.save(book2);
-        System.out.println(bookService.findAll());
-        bookService.delete(book);
-        bookService.save(book);
-        bookService.delete(book);
-        System.out.println(bookService.findAll());
+//        Book book2 = new BookBuilder()
+//                .setTitle("Moara cu noroc")
+//                .setAuthor("IoanSlavici")
+//                .setPublishedDate(LocalDate.of(1950,2,10))
+//                .build();
+//
+//        bookService.save(book2);
+//        System.out.println(bookService.findAll());
+//        bookService.delete(book);
+//        bookService.save(book);
+//        bookService.delete(book);
+//        System.out.println(bookService.findAll());
     }
 }
