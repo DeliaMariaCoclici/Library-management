@@ -35,9 +35,23 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
                 .build();
 
         UserValidator userValidator = new UserValidator(user);
-
         boolean userValid = userValidator.validate();
+
         Notification<Boolean> userRegisterNotification = new Notification<>();
+
+        Notification<Boolean> existsNotification = userRepository.existsByUsername(username);
+        if (existsNotification.hasErrors()) {
+            existsNotification.getErrors().forEach(userRegisterNotification::addError);
+            userRegisterNotification.setResult(Boolean.FALSE);
+            return userRegisterNotification;
+        }
+
+        Boolean exists = existsNotification.getResult();
+        if (exists != null && exists) {
+            userRegisterNotification.addError("Email is already in use");
+            userRegisterNotification.setResult(Boolean.FALSE);
+            return userRegisterNotification;
+        }
 
         if (!userValid) {
             userValidator.getErrors().forEach(userRegisterNotification::addError);

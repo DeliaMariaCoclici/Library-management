@@ -18,12 +18,22 @@ import view.model.BookDTO;
 public class BookView {
     private TableView<BookDTO> bookTable;
     private final ObservableList<BookDTO> booksObservableList;
+
     private TextField authorTextField;
     private TextField titleTextField;
+    private TextField stockTextField;
+    private TextField priceTextField;
+    private TextField quantityTextField;
+
     private Label authorLabel;
     private Label titleLabel;
+    private Label stockLabel;
+    private Label priceLabel;
+
     private Button saveButton;
     private Button deleteButton;
+    private Button buyButton;
+
 
     public BookView(Stage primaryStage, List<BookDTO> books) {
         primaryStage.setTitle("Library");
@@ -57,38 +67,70 @@ public class BookView {
         TableColumn<BookDTO, String> authorColumn = new TableColumn<>("Author");
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
 
-        bookTable.getColumns().addAll(titleColumn, authorColumn);
+        TableColumn<BookDTO, Integer> stockColumn = new TableColumn<>("Stock");
+        stockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
+
+        TableColumn<BookDTO, Double> priceColumn = new TableColumn<>("Price");
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        bookTable.getColumns().addAll(titleColumn, authorColumn, stockColumn, priceColumn);
         bookTable.setItems(booksObservableList);
 
-        gridPane.add(bookTable, 0, 0, 5, 1);
+        gridPane.add(bookTable, 0, 0, 7, 1);
     }
 
     public void initSaveOptions(GridPane gridPane) {
         titleLabel = new Label("Title");
         gridPane.add(titleLabel, 1, 1);
-
         titleTextField = new TextField();
         gridPane.add(titleTextField, 2, 1);
 
         authorLabel = new Label("Author");
         gridPane.add(authorLabel, 3, 1);
-
         authorTextField = new TextField();
         gridPane.add(authorTextField, 4, 1);
+
+        stockLabel = new Label("Stock");
+        gridPane.add(stockLabel, 1, 2);
+        stockTextField = new TextField();
+        gridPane.add(stockTextField, 2, 2);
+
+        priceLabel = new Label("Price");
+        gridPane.add(priceLabel, 3, 2);
+        priceTextField = new TextField();
+        gridPane.add(priceTextField, 4, 2);
 
         saveButton = new Button("Save");
         gridPane.add(saveButton, 5, 1);
 
         deleteButton = new Button("Delete");
         gridPane.add(deleteButton, 6, 1);
+
+        initSalesOptions(gridPane);
     }
 
+    public void initSalesOptions(GridPane gridPane) {
+        Label quantityLabel = new Label("Quantity");
+        gridPane.add(quantityLabel, 1, 3);
+        quantityTextField = new TextField();
+        gridPane.add(quantityTextField, 2, 3);
+
+        buyButton = new Button("Buy");
+        gridPane.add(buyButton, 3, 3);
+    }
+
+
+    //LISTENERS
     public void addSaveButtonListener(EventHandler<ActionEvent> saveButtonListener) {
         saveButton.setOnAction(saveButtonListener);
     }
 
     public void addDeleteButtonListener(EventHandler<ActionEvent> deleteButtonListener) {
         deleteButton.setOnAction(deleteButtonListener);
+    }
+
+    public void addBuyButtonListener(EventHandler<ActionEvent> buyButtonListener) {
+        buyButton.setOnAction(buyButtonListener);
     }
 
     public void addDisplayAlertMessage(String title, String header, String contextInfo) {
@@ -99,12 +141,29 @@ public class BookView {
         alert.showAndWait();
     }
 
+
+    public String getStock() {
+        return stockTextField.getText();
+    }
+
+    public String getPrice() {
+        return priceTextField.getText();
+    }
+
     public String getTitle() {
         return titleTextField.getText();
     }
 
     public String getAuthor() {
         return authorTextField.getText();
+    }
+
+    public TextField getQuantityTextField(){
+        return quantityTextField;
+    }
+
+    public String getQuantity(){
+        return quantityTextField.getText();
     }
 
     public void addBookToObservableList(BookDTO bookDTO) {

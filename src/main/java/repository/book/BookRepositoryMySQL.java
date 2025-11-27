@@ -50,15 +50,29 @@ public class BookRepositoryMySQL implements BookRepository {
 
     @Override
     public boolean save(Book book) {
-        String sql = "INSERT INTO book (author, title, publishedDate) VALUES (?, ?, ?);";
+        String sql = "INSERT INTO book (author, title, publishedDate, stock, price) VALUES (?, ?, ?, ?, ?);";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, book.getAuthor());
             preparedStatement.setString(2, book.getTitle());
+
             if (book.getPublishedDate() != null) {
                 preparedStatement.setDate(3, java.sql.Date.valueOf(book.getPublishedDate()));
             } else {
                 preparedStatement.setNull(3, Types.DATE);
             }
+
+            if(book.getStock() != null){
+                preparedStatement.setInt(4, book.getStock());
+            } else {
+                preparedStatement.setNull(4, Types.INTEGER);
+            }
+
+            if(book.getPrice() != null){
+                preparedStatement.setDouble(5, book.getPrice());
+            } else {
+                preparedStatement.setNull(5, Types.DOUBLE);
+            }
+
             int rowsInserted = preparedStatement.executeUpdate();
             if (rowsInserted == 1) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
@@ -69,6 +83,40 @@ public class BookRepositoryMySQL implements BookRepository {
                 return true;
             }
             return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(Book book) {
+        String sql = "UPDATE book SET title = ?, author = ?, stock = ?, price = ? WHERE id = ?;";
+
+        if(book.getId() == null) {
+            return false;
+        }
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, book.getTitle());
+            preparedStatement.setString(2, book.getAuthor());
+
+            if(book.getStock() != null){
+                preparedStatement.setInt(3, book.getStock());
+            } else {
+                preparedStatement.setNull(3, Types.INTEGER);
+            }
+
+            if(book.getPrice() != null){
+                preparedStatement.setDouble(4, book.getPrice());
+            } else {
+                preparedStatement.setNull(4, Types.DOUBLE);
+            }
+
+            preparedStatement.setLong(5, book.getId());
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            return rowsUpdated == 1;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -122,6 +170,11 @@ public class BookRepositoryMySQL implements BookRepository {
         builder.setTitle(resultSet.getString("title"));
         builder.setAuthor(resultSet.getString("author"));
         builder.setPublishedDate(publishedDate);
+
+        Integer stock = resultSet.getObject("stock", Integer.class);
+        Double price = resultSet.getObject("price", Double.class);
+        builder.setStock(stock);
+        builder.setPrice(price);
 
         return builder.build();
     }

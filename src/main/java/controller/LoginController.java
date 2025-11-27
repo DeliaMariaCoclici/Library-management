@@ -1,10 +1,14 @@
 package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.stage.Stage;
+import mapper.BookMapper;
 import model.User;
 import model.validation.Notification;
 import model.validation.UserValidator;
+import service.book.BookService;
 import service.user.AuthenticationService;
+import view.BookView;
 import view.LoginView;
 
 import java.util.ArrayList;
@@ -16,9 +20,14 @@ public class LoginController {
     private final LoginView loginView;
     private final AuthenticationService authenticationService;
 
-    public LoginController(LoginView loginView, AuthenticationService authenticationService) {
+    private final Stage loginStage;
+    private final BookService bookService;
+
+    public LoginController(LoginView loginView, AuthenticationService authenticationService, Stage loginStage, BookService bookService) {
         this.loginView = loginView;
         this.authenticationService = authenticationService;
+        this.loginStage = loginStage;
+        this.bookService = bookService;
 
         this.loginView.addLoginButtonListener(new LoginButtonListener());
         this.loginView.addRegisterButtonListener(new RegisterButtonListener());
@@ -39,6 +48,12 @@ public class LoginController {
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());
             }else{
                 loginView.setActionTargetText("LogIn Successful!");
+                loginView.getStage().close();
+
+                Stage bookStage = new Stage();
+                BookView bookView = new BookView(bookStage, BookMapper.convertBookListToDTOList(bookService.findAll()));
+
+                new BookController(bookView, bookService);
             }
         }
     }

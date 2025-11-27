@@ -21,7 +21,7 @@ public class Bootstrap {
     private static RightsRolesRepository rightsRolesRepository;
 
     public static void main(String[] args) throws SQLException {
-        dropAll();
+       // dropAll();
         bootstrapTables();
         bootstrapUserData();
     }

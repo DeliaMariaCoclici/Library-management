@@ -1,8 +1,10 @@
 package launcher;
 
+import controller.BookController;
 import controller.LoginController;
 import database.DatabaseConnectionFactory;
 import javafx.stage.Stage;
+import mapper.BookMapper;
 import repository.book.BookRepository;
 import repository.book.BookRepositoryMySQL;
 import repository.security.RightsRolesRepository;
@@ -13,6 +15,7 @@ import service.book.BookService;
 import service.book.BookServiceImplementation;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceImplementation;
+import view.BookView;
 import view.LoginView;
 
 import java.sql.Connection;
@@ -26,6 +29,8 @@ public class ComponentFactoryNotification {
     private final BookRepository bookRepository;
     private final BookService bookService;
     private static volatile ComponentFactoryNotification instance;
+    private final BookView bookView;
+    private final BookController bookController;
 
     public static ComponentFactoryNotification getInstance(Boolean componentsForTests, Stage stage) {
         if (instance == null) {
@@ -40,13 +45,19 @@ public class ComponentFactoryNotification {
 
     public ComponentFactoryNotification(Boolean componentsForTests, Stage stage) {
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(componentsForTests).getConnection();
+        //AUTH + USER
         this.rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
         this.userRepository =  new UserRepositoryMySQL(connection, rightsRolesRepository);
         this.authenticationService = new AuthenticationServiceImplementation(userRepository, rightsRolesRepository);
-        this.loginView = new LoginView(stage);
-        this.loginController = new LoginController(loginView, authenticationService);
+        //BOOK
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImplementation(bookRepository);
+        //BOOK VIEW + CONTROLLER
+        this.bookView = new BookView(stage, BookMapper.convertBookListToDTOList(bookService.findAll()));
+        this.bookController = new BookController(bookView, bookService);
+        //LOGIN VIEW + CONTROLLER
+        this.loginView = new LoginView(stage);
+        this.loginController = new LoginController(loginView, authenticationService, stage, bookService);
     }
 
     public AuthenticationService getAuthenticationService() {

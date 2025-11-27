@@ -30,6 +30,10 @@ public class Notification<T> {
         return result;
     }
 
+    public List<String> getErrors() {
+        return errors;
+    }
+
     public String getFormattedErrors(){
         return String.join("\n", errors);
     }

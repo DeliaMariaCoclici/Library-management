@@ -15,13 +15,18 @@ public class BookMapper {
                 .setId(book.getId())
                 .setTitle(book.getTitle())
                 .setAuthor(book.getAuthor())
+                .setStock(book.getStock())
+                .setPrice(book.getPrice())
                 .build();
     }
 
     public static Book convertBookDTOToBook(BookDTO bookDTO) {
         BookBuilder builder = new BookBuilder()
                 .setTitle(bookDTO.getTitle())
-                .setAuthor(bookDTO.getAuthor());
+                .setAuthor(bookDTO.getAuthor())
+                .setStock(bookDTO.getStock())
+                .setPrice(bookDTO.getPrice());
+
         if (bookDTO.getId() != null) {
             builder.setId(bookDTO.getId());
         }

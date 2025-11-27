@@ -13,3 +13,4 @@ public class Launcher extends Application {
         ComponentFactoryNotification componentFactoryNotification = ComponentFactoryNotification.getInstance(false,primaryStage);
     }
 }
+
