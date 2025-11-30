@@ -99,7 +99,7 @@ public class BookController {
             Integer newStock = currentStock - quantity;
             bookDTO.setStock(newStock);
 
-            boolean updateSale = bookService.update(BookMapper.convertBookDTOToBook(bookDTO));
+            boolean updateSale = bookService.sell(BookMapper.convertBookDTOToBook(bookDTO));
 
             if (updateSale) {
                 bookView.addDisplayAlertMessage("Sale successful", "Book Sold", "Book stock updated");

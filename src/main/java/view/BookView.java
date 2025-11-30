@@ -158,10 +158,6 @@ public class BookView {
         return authorTextField.getText();
     }
 
-    public TextField getQuantityTextField(){
-        return quantityTextField;
-    }
-
     public String getQuantity(){
         return quantityTextField.getText();
     }

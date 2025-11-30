@@ -90,7 +90,7 @@ public class BookRepositoryMySQL implements BookRepository {
     }
 
     @Override
-    public boolean update(Book book) {
+    public boolean sell(Book book) {
         String sql = "UPDATE book SET title = ?, author = ?, stock = ?, price = ? WHERE id = ?;";
 
         if(book.getId() == null) {

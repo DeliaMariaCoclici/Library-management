@@ -98,7 +98,6 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     @Override

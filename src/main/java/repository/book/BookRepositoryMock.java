@@ -31,7 +31,7 @@ public class BookRepositoryMock implements BookRepository {
     }
 
     @Override
-    public boolean update(Book book) {
+    public boolean sell(Book book) {
         if(book.getId() == null) return false;
 
         for (int i = 0; i < books.size(); i++) {

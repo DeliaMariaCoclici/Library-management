@@ -30,8 +30,8 @@ public class BookServiceImplementation implements BookService {
     }
 
     @Override
-    public boolean update(Book book) {
-        return bookRepository.update(book);
+    public boolean sell(Book book) {
+        return bookRepository.sell(book);
     }
 
     @Override
