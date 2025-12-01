@@ -6,11 +6,15 @@ import mapper.BookMapper;
 import model.User;
 import model.validation.Notification;
 import model.validation.UserValidator;
+import repository.order.OrderRepositoryMySQL;
 import service.book.BookService;
+import service.order.OrderService;
 import service.user.AuthenticationService;
+import service.user.UserService;
 import view.BookView;
 import view.LoginView;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -19,15 +23,20 @@ public class LoginController {
 
     private final LoginView loginView;
     private final AuthenticationService authenticationService;
+    private final UserService userService;
 
     private final Stage loginStage;
     private final BookService bookService;
+    private final Connection connection;
 
-    public LoginController(LoginView loginView, AuthenticationService authenticationService, Stage loginStage, BookService bookService) {
+
+    public LoginController(LoginView loginView, AuthenticationService authenticationService, Stage loginStage, BookService bookService, UserService userService, Connection connection) {
         this.loginView = loginView;
         this.authenticationService = authenticationService;
         this.loginStage = loginStage;
         this.bookService = bookService;
+        this.userService = userService;
+        this.connection = connection;
 
         this.loginView.addLoginButtonListener(new LoginButtonListener());
         this.loginView.addRegisterButtonListener(new RegisterButtonListener());
@@ -44,16 +53,24 @@ public class LoginController {
 
 
             //if (loginNotification == null)  -- n o sa fie niciodata null chiar daca login ul esueaza, findByUsernameAndPassword returneaza mereu un Notification cu setResul(null)
-            if(loginNotification.hasErrors()){
+            if (loginNotification.hasErrors()) {
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());
-            }else{
+            } else {
+                User loggedUser = loginNotification.getResult(); //////
+
                 loginView.setActionTargetText("LogIn Successful!");
                 loginView.getStage().close();
 
-                Stage bookStage = new Stage();
-                BookView bookView = new BookView(bookStage, BookMapper.convertBookListToDTOList(bookService.findAll()));
+                if (loggedUser.getRoles().stream().anyMatch(role -> role.getRole().equals("administrator"))) {
+                    OrderService orderService = new OrderService(new OrderRepositoryMySQL(connection));
+                    new AdminController(bookService, userService, orderService, loggedUser.getUsername());
+                } else {
+                    Stage bookStage = new Stage();
+                    BookView bookView = new BookView(bookStage, BookMapper.convertBookListToDTOList(bookService.findAll()));
 
-                new BookController(bookView, bookService);
+                    OrderService orderService = new OrderService(new OrderRepositoryMySQL(connection));
+                    new BookController(bookView, bookService, orderService, loggedUser.getUsername());
+                }
             }
         }
     }

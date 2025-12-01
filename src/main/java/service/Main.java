@@ -16,6 +16,7 @@ import service.book.BookService;
 import service.book.BookServiceImplementation;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceImplementation;
+import service.user.UserService;
 import view.LoginView;
 
 import java.sql.Connection;
@@ -34,6 +35,7 @@ public class Main extends Application {
 
         final RightsRolesRepository rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
         final UserRepository userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
+        final UserService userService = new UserService(userRepository);
         final AuthenticationService authenticationService = new AuthenticationServiceImplementation(userRepository, rightsRolesRepository);
 
         final BookRepository bookRepository = new BookRepositoryMySQL(connection);
@@ -41,6 +43,6 @@ public class Main extends Application {
 
         final LoginView loginView = new LoginView(primaryStage);
 
-        new LoginController(loginView, authenticationService, primaryStage, bookService);
+        new LoginController(loginView, authenticationService, primaryStage, bookService, userService, connection);
     }
 }

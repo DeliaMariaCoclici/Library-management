@@ -3,7 +3,9 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import mapper.BookMapper;
+import model.Order;
 import service.book.BookService;
+import service.order.OrderService;
 import view.BookView;
 import view.builder.BookDTOBuilder;
 import view.model.BookDTO;
@@ -13,9 +15,14 @@ public class BookController {
     private final BookView bookView;
     private final BookService bookService;
 
-    public BookController(BookView bookView, BookService bookService) {
+    private final OrderService orderService;
+    private final String loggedEmployeeEmail;
+
+    public BookController(BookView bookView, BookService bookService, OrderService orderService, String loggedEmployeeEmail) {
         this.bookView = bookView;
         this.bookService = bookService;
+        this.orderService = orderService;
+        this.loggedEmployeeEmail = loggedEmployeeEmail;
         this.bookView.addSaveButtonListener(new SaveButtonListener());
         this.bookView.addDeleteButtonListener(new DeleteButtonListener());
         this.bookView.addBuyButtonListener(new BuyButtonListener());
@@ -104,6 +111,19 @@ public class BookController {
             if (updateSale) {
                 bookView.addDisplayAlertMessage("Sale successful", "Book Sold", "Book stock updated");
                 bookView.getBookTableView().refresh();
+
+                //inserare automata in orders
+                Order order = new Order();
+                order.setBookTitle(bookDTO.getTitle());
+                order.setQuantity(quantity);
+                order.setEmployeeEmail(loggedEmployeeEmail);
+                order.setTotalPrice(bookDTO.getPrice() * quantity);
+                boolean saved = orderService.saveOrder(order);
+                if (!saved) {
+                    bookView.addDisplayAlertMessage("Order Error", "Database issue", "Could not save order.");
+                }
+
+
             } else {
                 bookView.addDisplayAlertMessage("Sale error", "Failed update", "Stock unable to update.");
             }

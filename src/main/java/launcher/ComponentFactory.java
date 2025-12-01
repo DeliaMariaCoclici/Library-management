@@ -7,8 +7,10 @@ import javafx.stage.Stage;
 import mapper.BookMapper;
 import repository.book.BookRepository;
 import repository.book.BookRepositoryMySQL;
+import repository.order.OrderRepositoryMySQL;
 import service.book.BookService;
 import service.book.BookServiceImplementation;
+import service.order.OrderService;
 import view.BookView;
 import view.model.BookDTO;
 
@@ -21,20 +23,24 @@ public class ComponentFactory {
     private final BookService bookService;
     private final BookView bookView;
     private final BookController bookController;
+    private final OrderService orderService;
+    private String loggedUserEmail;
 
-    private ComponentFactory(Boolean componentsForTest, Stage primaryStage) {
+    private ComponentFactory(Boolean componentsForTest, Stage primaryStage, String loggedUserEmail) {
         JDBConnectionWrapper connectionWrapper = DatabaseConnectionFactory.getConnectionWrapper(componentsForTest);
         Connection connection = connectionWrapper.getConnection();
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImplementation(bookRepository);
+        this.orderService = new OrderService(new OrderRepositoryMySQL(connection));
+        this.loggedUserEmail = loggedUserEmail;
         List<BookDTO> books = BookMapper.convertBookListToDTOList(bookService.findAll());
         this.bookView = new BookView(primaryStage, books);
-        this.bookController = new BookController(bookView, bookService);
+        this.bookController = new BookController(bookView, bookService, orderService, loggedUserEmail);
     }
 
-    public static synchronized ComponentFactory getInstance(Boolean componentsForTest, Stage primaryStage) {
+    public static synchronized ComponentFactory getInstance(Boolean componentsForTest, Stage primaryStage, String loggedUserEmail) {
         if (instance == null) {
-            instance = new ComponentFactory(componentsForTest, primaryStage);
+            instance = new ComponentFactory(componentsForTest, primaryStage, loggedUserEmail);
         }
         return instance;
     }
