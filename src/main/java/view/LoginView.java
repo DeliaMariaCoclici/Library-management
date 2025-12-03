@@ -43,6 +43,15 @@ public class LoginView {
         primaryStage.show();
     }
 
+    public LoginView(Stage primaryStage, boolean isAdminRegisterMode) {
+        this(primaryStage);
+
+        if (isAdminRegisterMode) {
+            logInButton.setVisible(false); // ascunzi login
+            signInButton.setText("Register Employee");
+        }
+    }
+
     private void initializeGridPane(GridPane gridPane){
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);

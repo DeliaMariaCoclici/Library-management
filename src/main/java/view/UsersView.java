@@ -24,9 +24,9 @@ public class UsersView {
     private final Stage stage;
     private TableView<UserDTO> userTable;
     private final ObservableList<UserDTO> userObservableList;
-
-    private Button addButton;
-    private Button deleteButton;
+    private Button addEmployeeButton;
+    private Button deleteEmployeeButton;
+    private Text actionTarget = new Text();
 
     public UsersView(Stage primaryStage, List<UserDTO> users) {
         this.stage = primaryStage;
@@ -71,26 +71,42 @@ public class UsersView {
     }
 
     private void initializeFields(GridPane gridPane){
-        addButton = new Button("Add Employee");
+        addEmployeeButton = new Button("Add Employee");
         HBox addButtonHBox = new HBox(10);
         addButtonHBox.setAlignment(Pos.BOTTOM_RIGHT);
-        addButtonHBox.getChildren().add(addButton);
+        addButtonHBox.getChildren().add(addEmployeeButton);
         gridPane.add(addButtonHBox, 1, 4);
 
-        deleteButton = new Button("Delete Employee");
+        deleteEmployeeButton = new Button("Delete Employee");
         HBox deleteButtonHBox = new HBox(10);
         deleteButtonHBox.setAlignment(Pos.BOTTOM_LEFT);
-        deleteButtonHBox.getChildren().add(deleteButton);
+        deleteButtonHBox.getChildren().add(deleteEmployeeButton);
         gridPane.add(deleteButtonHBox, 0, 4);
 
+        actionTarget.setFill(Color.FIREBRICK);
+        gridPane.add(actionTarget, 0, 5, 2, 1);
     }
 
-    public void addAddButtonListener(EventHandler<ActionEvent> listener) {
-        addButton.setOnAction(listener);
+    public void addAddEmployeeButtonListener(EventHandler<ActionEvent> listener) {
+        addEmployeeButton.setOnAction(listener);
     }
 
-    public void addDeleteButtonListener(EventHandler<ActionEvent> listener) {
-        deleteButton.setOnAction(listener);
+    public void addDeleteEmployeeButtonListener(EventHandler<ActionEvent> listener) {
+        deleteEmployeeButton.setOnAction(listener);
+    }
+
+
+    public UserDTO getSelectedUser() {
+        return userTable.getSelectionModel().getSelectedItem();
+    }
+
+    public void refreshUserList(List<UserDTO> fresh) {
+        ObservableList<UserDTO> newList = FXCollections.observableArrayList(fresh);
+        userTable.setItems(newList);
+    }
+
+    public void setActionTargetText(String text) {
+        actionTarget.setText(text);
     }
 
     public TableView<UserDTO> getUserTable() {

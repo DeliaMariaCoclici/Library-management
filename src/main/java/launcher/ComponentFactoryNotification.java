@@ -20,7 +20,7 @@ import service.report.ReportService;
 import service.report.ReportServiceImplementation;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceImplementation;
-import service.user.UserService;
+import service.user.UserServiceImplementation;
 import view.BookView;
 import view.LoginView;
 
@@ -40,7 +40,7 @@ public class ComponentFactoryNotification {
     private static volatile ComponentFactoryNotification instance;
     private final BookView bookView;
     //private final BookController bookController;
-    private final UserService userService;
+    private final UserServiceImplementation userService;
 
     public static ComponentFactoryNotification getInstance(Boolean componentsForTests, Stage stage) {
         if (instance == null) {
@@ -58,7 +58,7 @@ public class ComponentFactoryNotification {
         //AUTH + USER
         this.rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
         this.userRepository =  new UserRepositoryMySQL(connection, rightsRolesRepository);
-        this.userService = new UserService(userRepository);
+        this.userService = new UserServiceImplementation(userRepository, rightsRolesRepository);
         this.authenticationService = new AuthenticationServiceImplementation(userRepository, rightsRolesRepository);
 
         this.orderRepository = new OrderRepositoryMySQL(connection);

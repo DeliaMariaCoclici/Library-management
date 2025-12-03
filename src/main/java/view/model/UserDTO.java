@@ -1,6 +1,7 @@
 package view.model;
 
 import javafx.beans.property.*;
+import view.builder.UserDTOBuilder;
 
 public class UserDTO {
     private StringProperty username;

@@ -7,13 +7,13 @@ import mapper.BookMapper;
 import mapper.UserMapper;
 import service.book.BookService;
 import service.order.OrderService;
-import service.order.OrderServiceImplementation;
 import service.report.PDFReport;
 import service.report.ReportService;
-import service.report.ReportServiceImplementation;
-import service.user.UserService;
+import service.user.AuthenticationService;
+import service.user.UserServiceImplementation;
 import view.AdminView;
 import view.BookView;
+import view.LoginView;
 import view.UsersView;
 import view.model.UserDTO;
 
@@ -23,18 +23,20 @@ import java.util.List;
 public class AdminController {
     private final AdminView adminView;
     private final BookService bookService;
-    private final UserService userService;
+    private final UserServiceImplementation userService;
     private final Stage adminStage;
     private final OrderService orderService;
     private final String loggedAdminEmail;
     private final ReportService reportService;
+    private final AuthenticationService authenticationService;
     private final PDFReport pdfReport = new PDFReport();
 
     public AdminController(BookService bookService,
-                           UserService userService,
+                           UserServiceImplementation userService,
                            OrderService orderService,
                            String loggedUserEmail,
-                           ReportService reportService) {
+                           ReportService reportService,
+                           AuthenticationService authenticationService) {
         this.bookService = bookService;
         this.userService = userService;
         this.adminStage = new Stage();
@@ -42,6 +44,7 @@ public class AdminController {
         this.loggedAdminEmail = loggedUserEmail;
         this.orderService = orderService;
         this.reportService = reportService;
+        this.authenticationService = authenticationService;
 
         this.adminView.addBooksButtonListener(new AdminController.BookButtonListener());
         this.adminView.addUserButtonListener(new AdminController.UserButtonListener());
@@ -65,15 +68,18 @@ public class AdminController {
     private class UserButtonListener implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
-            Stage userStage = new Stage();
+            // Închide fereastra de admin
+            //adminStage.close();
 
-            List<UserDTO> userDTOList = userService.findAll()
+            // Deschide fereastra cu tabelul de employees
+            Stage usersStage = new Stage();
+            List<UserDTO> dtoList = userService.findAll()
                     .stream()
                     .map(UserMapper::convertUserToDTO)
                     .toList();
-
-            UsersView userView = new UsersView(userStage, userDTOList);
-            userStage.show();   /////pop-up, daca vrei sa se inchida adaugi adminStage.close();
+            UsersView usersView = new UsersView(usersStage, dtoList);
+            new UsersController(usersView, userService, authenticationService);
+            usersStage.show();
         }
     }
 
@@ -89,6 +95,4 @@ public class AdminController {
             }
         }
     }
-
-
 }

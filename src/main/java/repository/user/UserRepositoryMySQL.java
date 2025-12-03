@@ -1,4 +1,6 @@
 package repository.user;
+import database.Constants;
+import model.Role;
 import model.User;
 import model.builder.UserBuilder;
 import model.validation.Notification;
@@ -95,6 +97,18 @@ public class UserRepositoryMySQL implements UserRepository {
             rightsRolesRepository.addRolesToUser(user, user.getRoles());
 
             return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteByUsername(String email) {
+        String sql = "DELETE FROM " + USER + " WHERE username = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

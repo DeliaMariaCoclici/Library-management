@@ -9,6 +9,7 @@ public interface UserRepository {
     List<User> findAll();
     Notification<User> findByUsernameAndPassword(String username, String password);
     boolean save(User user);
+    boolean deleteByUsername(String username);
     void removeAll();
     Notification<Boolean> existsByUsername(String username);
 }

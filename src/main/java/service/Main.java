@@ -1,11 +1,9 @@
 package service;
 
-import com.mysql.cj.jdbc.JdbcConnection;
 import controller.LoginController;
 import database.JDBConnectionWrapper;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.validation.UserValidator;
 import repository.book.BookRepository;
 import repository.book.BookRepositoryMySQL;
 import repository.order.OrderRepository;
@@ -22,7 +20,7 @@ import service.report.ReportService;
 import service.report.ReportServiceImplementation;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceImplementation;
-import service.user.UserService;
+import service.user.UserServiceImplementation;
 import view.LoginView;
 
 import java.sql.Connection;
@@ -41,7 +39,7 @@ public class Main extends Application {
 
         final RightsRolesRepository rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
         final UserRepository userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
-        final UserService userService = new UserService(userRepository);
+        final UserServiceImplementation userService = new UserServiceImplementation(userRepository, rightsRolesRepository);
         final AuthenticationService authenticationService = new AuthenticationServiceImplementation(userRepository, rightsRolesRepository);
 
         final BookRepository bookRepository = new BookRepositoryMySQL(connection);

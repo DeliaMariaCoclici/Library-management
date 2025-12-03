@@ -6,12 +6,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.awt.*;
 
 public class AdminView {
     private Button booksButton;
@@ -69,6 +72,8 @@ public class AdminView {
         reportButtonHBox.setAlignment(Pos.CENTER_RIGHT);
         reportButtonHBox.getChildren().add(reportButton);
         gridPane.add(reportButtonHBox, 2, 4);
+
+
     }
 
     public void addBooksButtonListener(EventHandler<ActionEvent> booksButtonListener) {
