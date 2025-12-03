@@ -1,6 +1,5 @@
 package launcher;
 
-import controller.BookController;
 import controller.LoginController;
 import database.DatabaseConnectionFactory;
 import javafx.stage.Stage;
@@ -14,7 +13,7 @@ import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
 import service.book.BookService;
 import service.book.BookServiceImplementation;
-import service.order.OrderService;
+import service.order.OrderServiceImplementation;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceImplementation;
 import service.user.UserService;
@@ -35,7 +34,7 @@ public class ComponentFactoryNotification {
     private final BookView bookView;
     //private final BookController bookController;
     private final UserService userService;
-    private final OrderService orderService;
+    private final OrderServiceImplementation orderService;
 
     public static ComponentFactoryNotification getInstance(Boolean componentsForTests, Stage stage) {
         if (instance == null) {
@@ -56,7 +55,7 @@ public class ComponentFactoryNotification {
         this.userService = new UserService(userRepository);
         this.authenticationService = new AuthenticationServiceImplementation(userRepository, rightsRolesRepository);
 
-        this.orderService = new OrderService(new OrderRepositoryMySQL(connection));
+        this.orderService = new OrderServiceImplementation(new OrderRepositoryMySQL(connection));
         //BOOK
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImplementation(bookRepository);

@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import mapper.BookMapper;
 import mapper.UserMapper;
 import service.book.BookService;
-import service.order.OrderService;
+import service.order.OrderServiceImplementation;
 import service.user.UserService;
 import view.AdminView;
 import view.BookView;
@@ -21,10 +21,10 @@ public class AdminController {
     private final BookService bookService;
     private final UserService userService;
     private final Stage adminStage;
-    private final OrderService orderService;
+    private final OrderServiceImplementation orderService;
     private final String loggedAdminEmail;
 
-    public AdminController(BookService bookService, UserService userService, OrderService orderService, String loggedUserEmail) {
+    public AdminController(BookService bookService, UserService userService, OrderServiceImplementation orderService, String loggedUserEmail) {
         this.bookService = bookService;
         this.userService = userService;
         this.adminStage = new Stage();

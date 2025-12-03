@@ -5,19 +5,15 @@ import javafx.stage.Stage;
 import mapper.BookMapper;
 import model.User;
 import model.validation.Notification;
-import model.validation.UserValidator;
 import repository.order.OrderRepositoryMySQL;
 import service.book.BookService;
-import service.order.OrderService;
+import service.order.OrderServiceImplementation;
 import service.user.AuthenticationService;
 import service.user.UserService;
 import view.BookView;
 import view.LoginView;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.List;
 
 public class LoginController {
 
@@ -62,13 +58,13 @@ public class LoginController {
                 loginView.getStage().close();
 
                 if (loggedUser.getRoles().stream().anyMatch(role -> role.getRole().equals("administrator"))) {
-                    OrderService orderService = new OrderService(new OrderRepositoryMySQL(connection));
+                    OrderServiceImplementation orderService = new OrderServiceImplementation(new OrderRepositoryMySQL(connection));
                     new AdminController(bookService, userService, orderService, loggedUser.getUsername());
                 } else {
                     Stage bookStage = new Stage();
                     BookView bookView = new BookView(bookStage, BookMapper.convertBookListToDTOList(bookService.findAll()));
 
-                    OrderService orderService = new OrderService(new OrderRepositoryMySQL(connection));
+                    OrderServiceImplementation orderService = new OrderServiceImplementation(new OrderRepositoryMySQL(connection));
                     new BookController(bookView, bookService, orderService, loggedUser.getUsername());
                 }
             }
