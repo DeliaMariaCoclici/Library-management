@@ -106,7 +106,6 @@ public class Bootstrap {
 
         for (String role : rolesRights.keySet()) {
             Long roleId = rightsRolesRepository.findRoleByTitle(role).getId();
-
             for (String right : rolesRights.get(role)) {
                 Long rightId = rightsRolesRepository.findRightByTitle(right).getId();
                 rightsRolesRepository.addRoleRight(roleId, rightId);
