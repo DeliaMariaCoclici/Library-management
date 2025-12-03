@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 import mapper.BookMapper;
 import repository.book.BookRepository;
 import repository.book.BookRepositoryMySQL;
+import repository.order.OrderRepository;
 import repository.order.OrderRepositoryMySQL;
 import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQL;
@@ -13,7 +14,10 @@ import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
 import service.book.BookService;
 import service.book.BookServiceImplementation;
+import service.order.OrderService;
 import service.order.OrderServiceImplementation;
+import service.report.ReportService;
+import service.report.ReportServiceImplementation;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceImplementation;
 import service.user.UserService;
@@ -30,11 +34,13 @@ public class ComponentFactoryNotification {
     private final RightsRolesRepository rightsRolesRepository;
     private final BookRepository bookRepository;
     private final BookService bookService;
+    private final OrderService orderService;
+    private final ReportService reportService;
+    private OrderRepository orderRepository;
     private static volatile ComponentFactoryNotification instance;
     private final BookView bookView;
     //private final BookController bookController;
     private final UserService userService;
-    private final OrderServiceImplementation orderService;
 
     public static ComponentFactoryNotification getInstance(Boolean componentsForTests, Stage stage) {
         if (instance == null) {
@@ -55,7 +61,10 @@ public class ComponentFactoryNotification {
         this.userService = new UserService(userRepository);
         this.authenticationService = new AuthenticationServiceImplementation(userRepository, rightsRolesRepository);
 
-        this.orderService = new OrderServiceImplementation(new OrderRepositoryMySQL(connection));
+        this.orderRepository = new OrderRepositoryMySQL(connection);
+        this.orderService = new OrderServiceImplementation(orderRepository);
+        this.reportService = new ReportServiceImplementation(this.orderService);
+
         //BOOK
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImplementation(bookRepository);
@@ -64,7 +73,7 @@ public class ComponentFactoryNotification {
         //this.bookController = new BookController(bookView, bookService);
         //LOGIN VIEW + CONTROLLER
         this.loginView = new LoginView(stage);
-        this.loginController = new LoginController(loginView, authenticationService, stage, bookService, userService, connection);
+        this.loginController = new LoginController(loginView, authenticationService, bookService, userService, orderService, reportService, stage);
     }
 
     public AuthenticationService getAuthenticationService() {

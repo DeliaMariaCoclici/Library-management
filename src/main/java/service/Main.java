@@ -8,12 +8,18 @@ import javafx.stage.Stage;
 import model.validation.UserValidator;
 import repository.book.BookRepository;
 import repository.book.BookRepositoryMySQL;
+import repository.order.OrderRepository;
+import repository.order.OrderRepositoryMySQL;
 import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQL;
 import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
 import service.book.BookService;
 import service.book.BookServiceImplementation;
+import service.order.OrderService;
+import service.order.OrderServiceImplementation;
+import service.report.ReportService;
+import service.report.ReportServiceImplementation;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceImplementation;
 import service.user.UserService;
@@ -41,8 +47,16 @@ public class Main extends Application {
         final BookRepository bookRepository = new BookRepositoryMySQL(connection);
         final BookService bookService = new BookServiceImplementation(bookRepository);
 
+        // ORDER
+        final OrderRepository orderRepository = new OrderRepositoryMySQL(connection);
+        final OrderService orderService = new OrderServiceImplementation(orderRepository);
+
+        // REPORT
+        final ReportService reportService = new ReportServiceImplementation(orderService);
+
+
         final LoginView loginView = new LoginView(primaryStage);
 
-        new LoginController(loginView, authenticationService, primaryStage, bookService, userService, connection);
+        new LoginController(loginView, authenticationService, bookService, userService, orderService, reportService, primaryStage);
     }
 }

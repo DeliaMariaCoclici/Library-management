@@ -3,6 +3,7 @@ package service.order;
 import model.Order;
 import repository.order.OrderRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderServiceImplementation implements OrderService {
@@ -21,4 +22,10 @@ public class OrderServiceImplementation implements OrderService {
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
+
+    @Override
+    public List<Order> getOrdersBetween(LocalDateTime start, LocalDateTime end) {
+        return orderRepository.findBetween(start, end);
+    }
+
 }

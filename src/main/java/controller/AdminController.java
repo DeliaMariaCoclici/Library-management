@@ -6,7 +6,11 @@ import javafx.stage.Stage;
 import mapper.BookMapper;
 import mapper.UserMapper;
 import service.book.BookService;
+import service.order.OrderService;
 import service.order.OrderServiceImplementation;
+import service.report.PDFReport;
+import service.report.ReportService;
+import service.report.ReportServiceImplementation;
 import service.user.UserService;
 import view.AdminView;
 import view.BookView;
@@ -21,19 +25,27 @@ public class AdminController {
     private final BookService bookService;
     private final UserService userService;
     private final Stage adminStage;
-    private final OrderServiceImplementation orderService;
+    private final OrderService orderService;
     private final String loggedAdminEmail;
+    private final ReportService reportService;
+    private final PDFReport pdfReport = new PDFReport();
 
-    public AdminController(BookService bookService, UserService userService, OrderServiceImplementation orderService, String loggedUserEmail) {
+    public AdminController(BookService bookService,
+                           UserService userService,
+                           OrderService orderService,
+                           String loggedUserEmail,
+                           ReportService reportService) {
         this.bookService = bookService;
         this.userService = userService;
         this.adminStage = new Stage();
         this.adminView = new AdminView(adminStage);
         this.loggedAdminEmail = loggedUserEmail;
         this.orderService = orderService;
+        this.reportService = reportService;
 
         this.adminView.addBooksButtonListener(new AdminController.BookButtonListener());
         this.adminView.addUserButtonListener(new AdminController.UserButtonListener());
+        this.adminView.addReportButtonListener(new AdminController.ReportButtonListener());
 
         adminStage.show();
     }
@@ -64,4 +76,19 @@ public class AdminController {
             userStage.show();   /////pop-up, daca vrei sa se inchida adaugi adminStage.close();
         }
     }
+
+    private class ReportButtonListener implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                var dto = reportService.buildLastMonthReport();
+                var file = pdfReport.generate(dto, "lastMonthReport.pdf");
+                System.out.println("Raport generat: " + file.getAbsolutePath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }

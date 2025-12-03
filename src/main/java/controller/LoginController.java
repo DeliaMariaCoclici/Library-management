@@ -7,7 +7,9 @@ import model.User;
 import model.validation.Notification;
 import repository.order.OrderRepositoryMySQL;
 import service.book.BookService;
+import service.order.OrderService;
 import service.order.OrderServiceImplementation;
+import service.report.ReportService;
 import service.user.AuthenticationService;
 import service.user.UserService;
 import view.BookView;
@@ -20,19 +22,26 @@ public class LoginController {
     private final LoginView loginView;
     private final AuthenticationService authenticationService;
     private final UserService userService;
-
-    private final Stage loginStage;
     private final BookService bookService;
-    private final Connection connection;
+    private final OrderService orderService;
+    private final ReportService reportService;
+    private final Stage loginStage;
 
-
-    public LoginController(LoginView loginView, AuthenticationService authenticationService, Stage loginStage, BookService bookService, UserService userService, Connection connection) {
+    public LoginController(LoginView loginView,
+                           AuthenticationService authenticationService,
+                           BookService bookService,
+                           UserService userService,
+                           OrderService orderService,
+                           ReportService reportService,
+                           Stage loginStage)
+ {
         this.loginView = loginView;
         this.authenticationService = authenticationService;
-        this.loginStage = loginStage;
         this.bookService = bookService;
         this.userService = userService;
-        this.connection = connection;
+        this.orderService = orderService;
+        this.reportService = reportService;
+        this.loginStage = loginStage;
 
         this.loginView.addLoginButtonListener(new LoginButtonListener());
         this.loginView.addRegisterButtonListener(new RegisterButtonListener());
@@ -52,19 +61,16 @@ public class LoginController {
             if (loginNotification.hasErrors()) {
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());
             } else {
-                User loggedUser = loginNotification.getResult(); //////
+                User loggedUser = loginNotification.getResult();
 
                 loginView.setActionTargetText("LogIn Successful!");
                 loginView.getStage().close();
 
                 if (loggedUser.getRoles().stream().anyMatch(role -> role.getRole().equals("administrator"))) {
-                    OrderServiceImplementation orderService = new OrderServiceImplementation(new OrderRepositoryMySQL(connection));
-                    new AdminController(bookService, userService, orderService, loggedUser.getUsername());
+                    new AdminController(bookService, userService, orderService, loggedUser.getUsername(), reportService);
                 } else {
                     Stage bookStage = new Stage();
                     BookView bookView = new BookView(bookStage, BookMapper.convertBookListToDTOList(bookService.findAll()));
-
-                    OrderServiceImplementation orderService = new OrderServiceImplementation(new OrderRepositoryMySQL(connection));
                     new BookController(bookView, bookService, orderService, loggedUser.getUsername());
                 }
             }

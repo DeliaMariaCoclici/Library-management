@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 public class AdminView {
     private Button booksButton;
     private Button userButton;
+    private Button reportButton;
     private final Stage stage;
 
     public AdminView(Stage primaryStage) {
@@ -55,13 +56,19 @@ public class AdminView {
         HBox booksButtonHBox = new HBox(10);
         booksButtonHBox.setAlignment(Pos.CENTER_LEFT);
         booksButtonHBox.getChildren().add(booksButton);
-        gridPane.add(booksButtonHBox, 1, 4);
+        gridPane.add(booksButtonHBox, 0, 4);
 
         userButton = new Button("Manage employees");
         HBox userButtonHBox = new HBox(10);
-        userButtonHBox.setAlignment(Pos.CENTER_RIGHT);
+        userButtonHBox.setAlignment(Pos.CENTER);
         userButtonHBox.getChildren().add(userButton);
-        gridPane.add(userButtonHBox, 0, 4);
+        gridPane.add(userButtonHBox, 1, 4);
+
+        reportButton = new Button("Manage monthly reports");
+        HBox reportButtonHBox = new HBox(10);
+        reportButtonHBox.setAlignment(Pos.CENTER_RIGHT);
+        reportButtonHBox.getChildren().add(reportButton);
+        gridPane.add(reportButtonHBox, 2, 4);
     }
 
     public void addBooksButtonListener(EventHandler<ActionEvent> booksButtonListener) {
@@ -70,6 +77,10 @@ public class AdminView {
 
     public void addUserButtonListener(EventHandler<ActionEvent> userButtonListener) {
         userButton.setOnAction(userButtonListener);
+    }
+
+    public void addReportButtonListener(EventHandler<ActionEvent> reportButtonListener) {
+        reportButton.setOnAction(reportButtonListener);
     }
 
     public Stage getStage() {
