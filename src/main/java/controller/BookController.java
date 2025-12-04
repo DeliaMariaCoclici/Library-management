@@ -12,7 +12,6 @@ import view.builder.BookDTOBuilder;
 import view.model.BookDTO;
 
 public class BookController {
-
     private final BookView bookView;
     private final BookService bookService;
 

@@ -4,21 +4,23 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import mapper.BookMapper;
+import mapper.UserMapper;
 import model.User;
 import model.validation.Notification;
 import service.book.BookService;
 import service.order.OrderService;
 import service.report.ReportService;
 import service.user.AuthenticationService;
-import service.user.UserServiceImplementation;
+import service.user.UserService;
 import view.BookView;
 import view.LoginView;
+import view.model.UserDTO;
 
 public class LoginController {
 
     private final LoginView loginView;
     private final AuthenticationService authenticationService;
-    private final UserServiceImplementation userService;
+    private final UserService userService;
     private final BookService bookService;
     private final OrderService orderService;
     private final ReportService reportService;
@@ -27,7 +29,7 @@ public class LoginController {
     public LoginController(LoginView loginView,
                            AuthenticationService authenticationService,
                            BookService bookService,
-                           UserServiceImplementation userService,
+                           UserService userService,
                            OrderService orderService,
                            ReportService reportService,
                            Stage loginStage) {
@@ -56,7 +58,7 @@ public class LoginController {
             } else {
                 User loggedUser = loginNotification.getResult();
                 loginView.setActionTargetText("LogIn Successful!");
-                loginView.getStage().close();
+                loginStage.close();
 
                 if (loggedUser.getRoles().stream().anyMatch(role -> role.getRole().equals("administrator"))) {
                     new AdminController(bookService, userService, orderService, loggedUser.getUsername(), reportService, authenticationService);

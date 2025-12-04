@@ -21,7 +21,6 @@ public class UserMapper {
         if (userDTO.getId() != null) {
             builder.setId(userDTO.getId());
         }
-
         return builder.build();
     }
 }

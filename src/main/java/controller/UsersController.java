@@ -9,9 +9,11 @@ import service.user.AuthenticationService;
 import service.user.UserService;
 import view.LoginView;
 import view.UsersView;
+import view.model.UserDTO;
+
+import java.util.List;
 
 public class UsersController {
-
     private final UsersView usersView;
     private final UserService userService;
     private final AuthenticationService authenticationService;
@@ -27,25 +29,24 @@ public class UsersController {
         usersView.addDeleteEmployeeButtonListener(event -> deleteEmployee());
     }
 
-    /* ---------- ADD ---------- */
     private void openRegisterWindow() {
         Stage registerStage = new Stage();
         LoginView loginView = new LoginView(registerStage, true);
         new LoginController(loginView, authenticationService, null, null, null, null, registerStage);
 
         registerStage.setOnHiding(e -> {
-            var fresh = userService.findAll()
+            List<UserDTO> lista = userService.findAll()
                     .stream()
                     .map(UserMapper::convertUserToDTO)
                     .toList();
-            usersView.refreshUserList(fresh);
+            usersView.refreshUserList(lista);
             usersView.setActionTargetText("Employee list updated.");
         });
     }
 
-    /* ---------- DELETE ---------- */
+
     private void deleteEmployee() {
-        var selected = usersView.getSelectedUser();
+        UserDTO selected = usersView.getSelectedUser();
         if (selected == null) {
             usersView.setActionTargetText("No employee selected.");
             return;
@@ -55,11 +56,11 @@ public class UsersController {
         if (result.hasErrors()) {
             usersView.setActionTargetText(result.getFormattedErrors());
         } else {
-            var fresh = userService.findAll()
+            List<UserDTO> lista = userService.findAll()
                     .stream()
                     .map(UserMapper::convertUserToDTO)
                     .toList();
-            usersView.refreshUserList(fresh);
+            usersView.refreshUserList(lista);
             usersView.setActionTargetText("Employee deleted.");
         }
     }

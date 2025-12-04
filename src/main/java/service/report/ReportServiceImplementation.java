@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ReportServiceImplementation implements ReportService {
-
     private final OrderService orderService;
 
     public ReportServiceImplementation(OrderService orderService) {
@@ -30,13 +29,13 @@ public class ReportServiceImplementation implements ReportService {
                 .sum();
 
         List<ReportDTO.Line> lines = orders.stream()
-                .map(o -> new ReportDTO.Line(
-                        o.getBookTitle(),
-                        o.getQuantity(),
-                        o.getTotalPrice() / o.getQuantity(),
-                        o.getTotalPrice(),
-                        o.getOrderDate() != null ? o.getOrderDate().toLocalDate() : LocalDate.now(),
-                        o.getEmployeeEmail()))
+                .map(order -> new ReportDTO.Line(
+                        order.getBookTitle(),
+                        order.getQuantity(),
+                        order.getTotalPrice() / order.getQuantity(),
+                        order.getTotalPrice(),
+                        order.getOrderDate() != null ? order.getOrderDate().toLocalDate() : LocalDate.now(),
+                        order.getEmployeeEmail()))
                 .toList();
         return new ReportDTO(booksSold, total, lines);
     }

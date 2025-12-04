@@ -55,6 +55,7 @@ public class BookView {
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(25, 25, 25, 25));
+        gridPane.setStyle("-fx-background-color: #FFFACD;");
     }
 
     private void initTableView(GridPane gridPane) {
@@ -75,6 +76,8 @@ public class BookView {
 
         bookTable.getColumns().addAll(titleColumn, authorColumn, stockColumn, priceColumn);
         bookTable.setItems(booksObservableList);
+        bookTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
 
         gridPane.add(bookTable, 0, 0, 7, 1);
     }
@@ -102,9 +105,21 @@ public class BookView {
 
         saveButton = new Button("Save");
         gridPane.add(saveButton, 5, 1);
+        saveButton.setStyle(
+                "-fx-background-color: #8B0000; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 15;"
+        );
 
         deleteButton = new Button("Delete");
         gridPane.add(deleteButton, 6, 1);
+        deleteButton.setStyle(
+                "-fx-background-color: #8B0000; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 15;"
+        );
 
         initSalesOptions(gridPane);
     }
@@ -117,6 +132,13 @@ public class BookView {
 
         buyButton = new Button("Buy");
         gridPane.add(buyButton, 3, 3);
+        buyButton.setStyle(
+                "-fx-background-color: #8B0000; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 15;"
+        );
+
     }
 
 

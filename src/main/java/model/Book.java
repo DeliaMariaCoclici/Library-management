@@ -14,47 +14,37 @@ public class Book {
     public void setId(Long id) {
         this.id = id;
     }
+    public Long getId() { return id; }
 
     public void setTitle(String title) {
         this.title = title;
     }
+    public String getTitle() { return title; }
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+    public String getAuthor() {
+        return author;
     }
 
     public void setPublishedDate(LocalDate publishedDate) {
         this.publishedDate = publishedDate;
     }
+    public LocalDate getPublishedDate() {
+        return publishedDate;
+    }
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+    public Integer getStock() {
+        return stock;
     }
 
     public void setPrice(Double price) {
         this.price = price;
     }
-
-    public LocalDate getPublishedDate() {
-        return publishedDate;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Integer getStock() {
-        return stock;
-    }
-
     public Double getPrice() {
         return price;
     }

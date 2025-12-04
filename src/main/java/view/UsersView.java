@@ -50,6 +50,7 @@ public class UsersView {
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(25, 25, 25, 25));
+        gridPane.setStyle("-fx-background-color: #50C878;");
     }
 
     private void initializeSceneTitle(GridPane gridPane){
@@ -62,10 +63,23 @@ public class UsersView {
         userTable = new TableView<>();
         userTable.setPlaceholder(new Label("No users found"));
 
+        userTable.setRowFactory(tv -> new TableRow<UserDTO>() {
+            @Override
+            protected void updateItem(UserDTO item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("");
+                } else {
+                    setStyle("-fx-background-color: #FFFACD;");
+                }
+            }
+        });
+
         TableColumn<UserDTO, String> usernameColumn = new TableColumn<>("Username");
         usernameColumn.setCellValueFactory(data -> data.getValue().usernameProperty());
         userTable.getColumns().add(usernameColumn);
         userTable.setItems(userObservableList);
+        userTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         gridPane.add(userTable, 0, 1, 2, 1);
     }
@@ -76,12 +90,24 @@ public class UsersView {
         addButtonHBox.setAlignment(Pos.BOTTOM_RIGHT);
         addButtonHBox.getChildren().add(addEmployeeButton);
         gridPane.add(addButtonHBox, 1, 4);
+        addEmployeeButton.setStyle(
+                "-fx-background-color: #046307; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 15;"
+        );
 
         deleteEmployeeButton = new Button("Delete Employee");
         HBox deleteButtonHBox = new HBox(10);
         deleteButtonHBox.setAlignment(Pos.BOTTOM_LEFT);
         deleteButtonHBox.getChildren().add(deleteEmployeeButton);
         gridPane.add(deleteButtonHBox, 0, 4);
+        deleteEmployeeButton.setStyle(
+                "-fx-background-color: #046307; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 15;"
+        );
 
         actionTarget.setFill(Color.FIREBRICK);
         gridPane.add(actionTarget, 0, 5, 2, 1);
@@ -94,7 +120,6 @@ public class UsersView {
     public void addDeleteEmployeeButtonListener(EventHandler<ActionEvent> listener) {
         deleteEmployeeButton.setOnAction(listener);
     }
-
 
     public UserDTO getSelectedUser() {
         return userTable.getSelectionModel().getSelectedItem();

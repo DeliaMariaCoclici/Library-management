@@ -41,9 +41,11 @@ public class JDBConnectionWrapper {
                 ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
         statement.execute(sql);
     }
+
     public boolean testConnection() throws SQLException {
         return connection.isValid(TIMEOUT);
     }
+
     public Connection getConnection(){
         return connection;
     }

@@ -20,7 +20,6 @@ public class UserValidator {
     public boolean validate() {
         validateUsername(user.getUsername());
         validatePassword(user.getPassword());
-
         return errors.isEmpty();
     }
 

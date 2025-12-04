@@ -47,7 +47,7 @@ public class LoginView {
         this(primaryStage);
 
         if (isAdminRegisterMode) {
-            logInButton.setVisible(false); // ascunzi login
+            logInButton.setVisible(false);
             signInButton.setText("Register Employee");
         }
     }
@@ -57,6 +57,7 @@ public class LoginView {
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(25, 25, 25, 25));
+        gridPane.setStyle("-fx-background-color: rgb(255, 192, 203);");
     }
 
     private void initializeSceneTitle(GridPane gridPane){
@@ -83,12 +84,25 @@ public class LoginView {
         signInButtonHBox.setAlignment(Pos.BOTTOM_RIGHT);
         signInButtonHBox.getChildren().add(signInButton);
         gridPane.add(signInButtonHBox, 1, 4);
+        signInButton.setStyle(
+                "-fx-background-color: #BA55D3; " +
+                        "-fx-text-fill: black; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 15;"
+        );
 
         logInButton = new Button("Log In");
         HBox logInButtonHBox = new HBox(10);
         logInButtonHBox.setAlignment(Pos.BOTTOM_LEFT);
         logInButtonHBox.getChildren().add(logInButton);
         gridPane.add(logInButtonHBox, 0, 4);
+        logInButton.setStyle(
+                "-fx-background-color: #BA55D3; " +
+                        "-fx-text-fill: black; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 15;"
+        );
+
 
         actiontarget = new Text();
         actiontarget.setFill(Color.FIREBRICK);

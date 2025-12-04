@@ -1,6 +1,4 @@
 package repository.user;
-import database.Constants;
-import model.Role;
 import model.User;
 import model.builder.UserBuilder;
 import model.validation.Notification;
@@ -13,8 +11,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import static database.Constants.Tables.USER;
-import static java.util.Collections.singletonList;
-
 
 
 public class UserRepositoryMySQL implements UserRepository {

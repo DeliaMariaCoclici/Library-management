@@ -10,15 +10,12 @@ public class Notification<T> {
     public Notification() {
         this.errors = new ArrayList();
     }
-
     public void addError(String error){
         this.errors.add(error);
     }
-
     public boolean hasErrors(){
         return !this.errors.isEmpty();
     }
-
     public void setResult(T result) {
         this.result = result;
     }
@@ -33,7 +30,6 @@ public class Notification<T> {
     public List<String> getErrors() {
         return errors;
     }
-
     public String getFormattedErrors(){
         return String.join("\n", errors);
     }

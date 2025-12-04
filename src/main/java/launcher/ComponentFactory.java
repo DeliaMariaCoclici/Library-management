@@ -32,6 +32,7 @@ public class ComponentFactory {
     private ComponentFactory(Boolean componentsForTest, Stage primaryStage) {
         JDBConnectionWrapper connectionWrapper = DatabaseConnectionFactory.getConnectionWrapper(componentsForTest);
         Connection connection = connectionWrapper.getConnection();
+
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImplementation(bookRepository);
         this.orderRepository = new OrderRepositoryMySQL(connection);

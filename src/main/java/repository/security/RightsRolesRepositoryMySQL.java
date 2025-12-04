@@ -21,17 +21,15 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
 
     private final Connection connection;
 
-    public RightsRolesRepositoryMySQL(Connection connection) {
-        this.connection = connection;
-    }
+    public RightsRolesRepositoryMySQL(Connection connection) { this.connection = connection; }
 
     @Override
     public void addRole(String role) {
         try {
-            PreparedStatement insertStatement = connection
+            PreparedStatement sql = connection
                     .prepareStatement("INSERT IGNORE INTO " + ROLE + " values (null, ?)");
-            insertStatement.setString(1, role);
-            insertStatement.executeUpdate();
+            sql.setString(1, role);
+            sql.executeUpdate();
         } catch (SQLException e) {
 
         }
@@ -112,7 +110,7 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
                 insertUserRoleStatement.executeUpdate();
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -129,7 +127,7 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
             }
             return roles;
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return null;
     }
@@ -143,7 +141,7 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
             insertStatement.setLong(2, rightId);
             insertStatement.executeUpdate();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 }

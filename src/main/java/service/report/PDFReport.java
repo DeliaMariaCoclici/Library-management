@@ -13,8 +13,7 @@ import java.time.format.DateTimeFormatter;
 public class PDFReport {
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
-    // Funcție simplă pentru înlocuirea diacriticelor
+    
     private String removeDiacritics(String text) {
         return text.replace("ă", "a")
                 .replace("Ă", "A")
@@ -35,7 +34,7 @@ public class PDFReport {
             doc.addPage(page);
 
             try (PDPageContentStream content = new PDPageContentStream(doc, page)) {
-                // Titlu raport
+                // Titlu 
                 content.setFont(PDType1Font.HELVETICA_BOLD, 16);
                 content.beginText();
                 content.newLineAtOffset(100, 700);
@@ -58,9 +57,9 @@ public class PDFReport {
                 content.newLineAtOffset(100, y);
                 content.showText("Titlu");
                 content.newLineAtOffset(150, 0);
-                content.showText("Cant.");
+                content.showText("Cantitate");
                 content.newLineAtOffset(50, 0);
-                content.showText("Pret/uni");
+                content.showText("Pret/bucata");
                 content.newLineAtOffset(60, 0);
                 content.showText("Total");
                 content.newLineAtOffset(60, 0);
@@ -89,6 +88,7 @@ public class PDFReport {
                     content.endText();
                     y -= 12;
 
+                    // Adauga pagina - marginea paginii
                     if (y < 50) {
                         content.close();
                         PDPage newPage = new PDPage();

@@ -1,5 +1,6 @@
 package launcher;
 
+import controller.BookController;
 import controller.LoginController;
 import database.DatabaseConnectionFactory;
 import javafx.stage.Stage;
@@ -20,6 +21,7 @@ import service.report.ReportService;
 import service.report.ReportServiceImplementation;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceImplementation;
+import service.user.UserService;
 import service.user.UserServiceImplementation;
 import view.BookView;
 import view.LoginView;
@@ -31,16 +33,17 @@ public class ComponentFactoryNotification {
     private final LoginController loginController;
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final RightsRolesRepository rightsRolesRepository;
+
     private final BookRepository bookRepository;
     private final BookService bookService;
+    private final OrderRepository orderRepository;
     private final OrderService orderService;
     private final ReportService reportService;
-    private OrderRepository orderRepository;
+
     private static volatile ComponentFactoryNotification instance;
     private final BookView bookView;
-    //private final BookController bookController;
-    private final UserServiceImplementation userService;
 
     public static ComponentFactoryNotification getInstance(Boolean componentsForTests, Stage stage) {
         if (instance == null) {
@@ -61,16 +64,15 @@ public class ComponentFactoryNotification {
         this.userService = new UserServiceImplementation(userRepository, rightsRolesRepository);
         this.authenticationService = new AuthenticationServiceImplementation(userRepository, rightsRolesRepository);
 
+        //ORDER + REPORT
         this.orderRepository = new OrderRepositoryMySQL(connection);
         this.orderService = new OrderServiceImplementation(orderRepository);
         this.reportService = new ReportServiceImplementation(this.orderService);
-
         //BOOK
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImplementation(bookRepository);
-        //BOOK VIEW + CONTROLLER
+        //BOOK VIEW
         this.bookView = new BookView(stage, BookMapper.convertBookListToDTOList(bookService.findAll()));
-        //this.bookController = new BookController(bookView, bookService);
         //LOGIN VIEW + CONTROLLER
         this.loginView = new LoginView(stage);
         this.loginController = new LoginController(loginView, authenticationService, bookService, userService, orderService, reportService, stage);

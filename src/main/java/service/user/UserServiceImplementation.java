@@ -30,16 +30,9 @@ public class UserServiceImplementation implements UserService{
 
     @Override
     public Notification<Boolean> saveEmployee(String email, String password) {
-        Notification<Boolean> note = new Notification<>();
+        Notification<Boolean> saveNotification = new Notification<>();
 
-        /* 1. validare */
         Role employeeRole = rightsRolesRepository.findRoleByTitle(Constants.Roles.EMPLOYEE);
-        if (employeeRole == null) {
-            note.addError("Rolul EMPLOYEE nu există în baza de date");
-            note.setResult(Boolean.FALSE);
-            return note;
-        }
-
         User user = new UserBuilder()
                 .setUsername(email)
                 .setPassword(password)
@@ -48,41 +41,39 @@ public class UserServiceImplementation implements UserService{
 
         UserValidator validator = new UserValidator(user);
         if (!validator.validate()) {
-            validator.getErrors().forEach(note::addError);
-            note.setResult(Boolean.FALSE);
-            return note;
+            validator.getErrors().forEach(saveNotification::addError);
+            saveNotification.setResult(Boolean.FALSE);
+            return saveNotification;
         }
 
-        /* 2. există deja? */
         Notification<Boolean> exists = userRepository.existsByUsername(email);
         if (exists.hasErrors() || Boolean.TRUE.equals(exists.getResult())) {
-            exists.getErrors().forEach(note::addError);
-            note.setResult(Boolean.FALSE);
-            return note;
+            exists.getErrors().forEach(saveNotification::addError);
+            saveNotification.setResult(Boolean.FALSE);
+            return saveNotification;
         }
 
-        /* 3. hash + save */
         user.setPassword(hashPassword(password));
         boolean ok = userRepository.save(user);
-        note.setResult(ok);
-        if (!ok) note.addError("Database error – employee not saved");
-        return note;
+        saveNotification.setResult(ok);
+        if (!ok) saveNotification.addError("Database error – employee not saved");
+        return saveNotification;
     }
 
     @Override
     public Notification<Boolean> deleteByUsername(String email) {
-        Notification<Boolean> note = new Notification<>();
+        Notification<Boolean> deleteNotification = new Notification<>();
 
         if (email == null || email.isBlank()) {
-            note.addError("Email lipsă");
-            note.setResult(Boolean.FALSE);
-            return note;
+            deleteNotification.addError("Email lipsă");
+            deleteNotification.setResult(Boolean.FALSE);
+            return deleteNotification;
         }
 
         boolean done = userRepository.deleteByUsername(email);
-        note.setResult(done);
-        if (!done) note.addError("Nu există employee cu acest email");
-        return note;
+        deleteNotification.setResult(done);
+        if (!done) deleteNotification.addError("Nu există employee cu acest email");
+        return deleteNotification;
     }
 
     private String hashPassword(String password) {

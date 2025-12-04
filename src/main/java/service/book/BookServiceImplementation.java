@@ -9,6 +9,7 @@ import java.util.List;
 
 public class BookServiceImplementation implements BookService {
     private final BookRepository bookRepository;
+
     public BookServiceImplementation(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }

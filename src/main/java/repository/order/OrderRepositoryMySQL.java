@@ -10,9 +10,7 @@ import java.util.List;
 public class OrderRepositoryMySQL implements OrderRepository {
     private final Connection connection;
 
-    public OrderRepositoryMySQL(Connection connection) {
-        this.connection = connection;
-    }
+    public OrderRepositoryMySQL(Connection connection) { this.connection = connection; }
 
     @Override
     public boolean save(Order order) {
@@ -55,7 +53,6 @@ public class OrderRepositoryMySQL implements OrderRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return orders;
     }
 
@@ -68,17 +65,16 @@ public class OrderRepositoryMySQL implements OrderRepository {
             ps.setTimestamp(2, Timestamp.valueOf(end));
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Order o = new Order();
-                o.setId(rs.getLong("id"));
-                o.setBookTitle(rs.getString("book_title"));
-                o.setQuantity(rs.getInt("quantity"));
-                o.setEmployeeEmail(rs.getString("employee_email"));
-                o.setTotalPrice(rs.getDouble("total_price"));
-
+                Order order = new Order();
+                order.setId(rs.getLong("id"));
+                order.setBookTitle(rs.getString("book_title"));
+                order.setQuantity(rs.getInt("quantity"));
+                order.setEmployeeEmail(rs.getString("employee_email"));
+                order.setTotalPrice(rs.getDouble("total_price"));
                 Timestamp ts = rs.getTimestamp("order_date");
-                o.setOrderDate(ts != null ? ts.toLocalDateTime() : LocalDateTime.now());
+                order.setOrderDate(ts != null ? ts.toLocalDateTime() : LocalDateTime.now());
 
-                list.add(o);
+                list.add(order);
             }
         } catch (SQLException e) {
             e.printStackTrace();

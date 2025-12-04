@@ -128,11 +128,13 @@ public class BookRepositoryMySQL implements BookRepository {
     public boolean delete(Book book) {
         String sql;
         boolean byId = book.getId() != null;
+
         if (byId) {
             sql = "DELETE FROM book WHERE id = ?;";
         } else {
             sql = "DELETE FROM book WHERE author = ? AND title = ?;";
         }
+
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             if (byId) {
                 preparedStatement.setLong(1, book.getId());
@@ -171,6 +173,7 @@ public class BookRepositoryMySQL implements BookRepository {
         builder.setAuthor(resultSet.getString("author"));
         builder.setPublishedDate(publishedDate);
 
+        //valori care pot fi null
         Integer stock = resultSet.getObject("stock", Integer.class);
         Double price = resultSet.getObject("price", Double.class);
         builder.setStock(stock);

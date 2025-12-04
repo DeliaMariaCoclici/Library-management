@@ -2,6 +2,7 @@ package view;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -29,7 +30,6 @@ public class AdminView {
         GridPane gridPane = new GridPane();
         initializeGridPane(gridPane);
 
-        gridPane.setStyle("-fx-background-color: black;");
         Scene scene = new Scene(gridPane, 720, 480);
         primaryStage.setScene(scene);
 
@@ -44,14 +44,15 @@ public class AdminView {
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(25, 25, 25, 25));
-        gridPane.setStyle("-fx-background-color: black;");
+        gridPane.setStyle("-fx-background-color: #ADD8E6;");
     }
 
     private void initializeSceneTitle(GridPane gridPane){
-        Text sceneTitle = new Text("ADMIN PAGE SETTINGS");
+        Text sceneTitle = new Text("                      ADMIN PAGE SETTINGS");
         sceneTitle.setFont(Font.font("Tahome", FontWeight.BOLD, 20));
-        sceneTitle.setFill(javafx.scene.paint.Color.WHITE);
+        sceneTitle.setFill(javafx.scene.paint.Color.BLACK);
         gridPane.add(sceneTitle, 0, 0, 2, 1);
+        GridPane.setHalignment(sceneTitle, HPos.CENTER);
     }
 
     private void initializeFields(GridPane gridPane){
@@ -60,20 +61,36 @@ public class AdminView {
         booksButtonHBox.setAlignment(Pos.CENTER_LEFT);
         booksButtonHBox.getChildren().add(booksButton);
         gridPane.add(booksButtonHBox, 0, 4);
+        booksButton.setStyle(
+                "-fx-background-color: #4682B4; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 15;"
+        );
 
         userButton = new Button("Manage employees");
         HBox userButtonHBox = new HBox(10);
         userButtonHBox.setAlignment(Pos.CENTER);
         userButtonHBox.getChildren().add(userButton);
         gridPane.add(userButtonHBox, 1, 4);
+        userButton.setStyle(
+                "-fx-background-color: #4682B4; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 15;"
+        );
 
         reportButton = new Button("Manage monthly reports");
         HBox reportButtonHBox = new HBox(10);
         reportButtonHBox.setAlignment(Pos.CENTER_RIGHT);
         reportButtonHBox.getChildren().add(reportButton);
         gridPane.add(reportButtonHBox, 2, 4);
-
-
+        reportButton.setStyle(
+                "-fx-background-color: #4682B4; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 15;"
+        );
     }
 
     public void addBooksButtonListener(EventHandler<ActionEvent> booksButtonListener) {

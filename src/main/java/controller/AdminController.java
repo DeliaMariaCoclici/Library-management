@@ -10,20 +10,23 @@ import service.order.OrderService;
 import service.report.PDFReport;
 import service.report.ReportService;
 import service.user.AuthenticationService;
+import service.user.UserService;
 import service.user.UserServiceImplementation;
 import view.AdminView;
 import view.BookView;
 import view.LoginView;
 import view.UsersView;
+import view.model.ReportDTO;
 import view.model.UserDTO;
 
+import java.io.File;
 import java.util.List;
 
 
 public class AdminController {
     private final AdminView adminView;
     private final BookService bookService;
-    private final UserServiceImplementation userService;
+    private final UserService userService;
     private final Stage adminStage;
     private final OrderService orderService;
     private final String loggedAdminEmail;
@@ -32,19 +35,19 @@ public class AdminController {
     private final PDFReport pdfReport = new PDFReport();
 
     public AdminController(BookService bookService,
-                           UserServiceImplementation userService,
+                           UserService userService,
                            OrderService orderService,
                            String loggedUserEmail,
                            ReportService reportService,
                            AuthenticationService authenticationService) {
         this.bookService = bookService;
         this.userService = userService;
-        this.adminStage = new Stage();
-        this.adminView = new AdminView(adminStage);
         this.loggedAdminEmail = loggedUserEmail;
         this.orderService = orderService;
         this.reportService = reportService;
         this.authenticationService = authenticationService;
+        this.adminStage =  new Stage();
+        this.adminView = new AdminView(adminStage);
 
         this.adminView.addBooksButtonListener(new AdminController.BookButtonListener());
         this.adminView.addUserButtonListener(new AdminController.UserButtonListener());
@@ -59,19 +62,13 @@ public class AdminController {
             Stage bookStage = new Stage();
             BookView bookView = new BookView(bookStage,
                     BookMapper.convertBookListToDTOList(bookService.findAll()));
-            new BookController(bookView, bookService,orderService, loggedAdminEmail );
-
-            //sa inchid admin page cand deschid book view
+            new BookController(bookView, bookService, orderService, loggedAdminEmail );
         }
     }
 
     private class UserButtonListener implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
-            // Închide fereastra de admin
-            //adminStage.close();
-
-            // Deschide fereastra cu tabelul de employees
             Stage usersStage = new Stage();
             List<UserDTO> dtoList = userService.findAll()
                     .stream()
@@ -87,8 +84,8 @@ public class AdminController {
         @Override
         public void handle(ActionEvent event) {
             try {
-                var dto = reportService.buildLastMonthReport();
-                var file = pdfReport.generate(dto, "lastMonthReport.pdf");
+                ReportDTO dto = reportService.buildLastMonthReport();
+                File file = pdfReport.generate(dto, "lastMonthReport.pdf");
                 System.out.println("Raport generat: " + file.getAbsolutePath());
             } catch (Exception e) {
                 e.printStackTrace();
